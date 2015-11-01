@@ -6,7 +6,9 @@ import com.rethinkdb.net.Connection;
 import com.rethinkdb.net.ConnectionInstance;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.value.Value;
+import org.dsa.iot.dslink.node.value.ValueType;
 import org.dsa.iot.dslink.node.value.ValueUtils;
+import org.dsa.iot.dslink.util.Objects;
 import org.dsa.iot.dslink.util.handler.CompleteHandler;
 import org.dsa.iot.historian.database.Database;
 import org.dsa.iot.historian.database.DatabaseProvider;
@@ -16,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class HistoryDb extends Database {
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryDb.class);
@@ -99,6 +104,11 @@ public class HistoryDb extends Database {
     @Override
     public void close() throws Exception {
         connection.close();
+
+        if (tickTimer != null) {
+            tickTimer.cancel(true);
+            tickTimer = null;
+        }
     }
 
     @Override
@@ -124,5 +134,29 @@ public class HistoryDb extends Database {
 
     @Override
     public void initExtensions(Node node) {
+        final ScheduledThreadPoolExecutor stpe = Objects.getDaemonThreadPool();
+
+        statusNode = node
+                .createChild("status")
+                .setValueType(ValueType.makeBool("Connected", "Disconnected"))
+                .setDisplayName("Status")
+                .build();
+
+        tickTimer = stpe.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if (connection.isOpen()) {
+                    statusNode.setValue(trueValue);
+                } else {
+                    statusNode.setValue(falseValue);
+                }
+            }
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
+
+    private static Value falseValue = new Value(false);
+    private static Value trueValue = new Value(true);
+    private ScheduledFuture tickTimer;
+
+    private Node statusNode;
 }

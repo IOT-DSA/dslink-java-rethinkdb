@@ -13,7 +13,7 @@ import org.dsa.iot.dslink.util.handler.Handler;
 import org.dsa.iot.historian.database.Database;
 import org.dsa.iot.historian.database.DatabaseProvider;
 
-public class DbProvider extends DatabaseProvider {
+public class HistoryDbProvider extends DatabaseProvider {
     @SuppressWarnings("Duplicates")
     @Override
     public Action createDbAction(Permission perm) {
