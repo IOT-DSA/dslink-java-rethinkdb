@@ -1,0 +1,46 @@
+{
+  "name": "dslink-java-rethinkdb",
+  "version": "0.0.1",
+  "description": "RethinkDB Historian",
+  "license": "Apache",
+  "author": {
+    "name": "Kenneth Endfinger",
+    "email": "kaendfinger@gmail.com"
+  },
+  "main": "bin/dslink-java-rethinkdb",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IOT-DSA/dslink-java-rethinkdb"
+  },
+  "bugs": {
+    "url": "https://github.com/IOT-DSA/dslink-java-rethinkdb/issues"
+  },
+  "configs": {
+    "name": {
+      "type": "string",
+      "default": "RethinkDB"
+    },
+    "broker": {
+      "type": "url"
+    },
+    "token": {
+      "type": "string"
+    },
+    "nodes": {
+      "type": "path",
+      "default": "nodes.json"
+    },
+    "key": {
+      "type": "path",
+      "default": ".key"
+    },
+    "log": {
+      "type": "enum",
+      "default": "info"
+    },
+    "handler_class": {
+      "type": "string",
+      "default": "org.dsa.iot.rethinkdb.Main"
+    }
+  }
+}
