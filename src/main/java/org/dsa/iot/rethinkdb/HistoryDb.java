@@ -3,7 +3,6 @@ package org.dsa.iot.rethinkdb;
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.gen.ast.*;
 import com.rethinkdb.net.Connection;
-import com.rethinkdb.net.ConnectionInstance;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.value.Value;
 import org.dsa.iot.dslink.node.value.ValueType;
@@ -30,7 +29,7 @@ public class HistoryDb extends Database {
     private String database;
     private String table;
     private RethinkDB r = RethinkDB.r;
-    private Connection<ConnectionInstance> connection;
+    private Connection connection;
 
     public HistoryDb(String name, DatabaseProvider provider, String host, int port, String database, String table) {
         super(name, provider);
