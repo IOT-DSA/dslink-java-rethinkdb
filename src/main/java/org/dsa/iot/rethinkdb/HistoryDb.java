@@ -28,15 +28,33 @@ public class HistoryDb extends Database {
     private int port;
     private String database;
     private String table;
+
+    private String authKey;
+    private String user;
+    private String password;
+
     private RethinkDB r = RethinkDB.r;
     private Connection connection;
 
-    public HistoryDb(String name, DatabaseProvider provider, String host, int port, String database, String table) {
+    public HistoryDb(
+            String name,
+            DatabaseProvider provider,
+            String host,
+            int port,
+            String database,
+            String table,
+            String user,
+            String password,
+            String authKey
+    ) {
         super(name, provider);
         this.host = host;
         this.port = port;
         this.database = database;
         this.table = table;
+        this.user = user;
+        this.password = password;
+        this.authKey = authKey;
     }
 
     @Override
@@ -112,7 +130,21 @@ public class HistoryDb extends Database {
 
     @Override
     protected void performConnect() throws Exception {
-        connection = r.connection().hostname(host).port(port).db(database).connect();
+        Connection.Builder cBuilder = r
+                .connection()
+                .hostname(host)
+                .port(port)
+                .db(database);
+
+        if (user != null && password != null && !user.isEmpty()) {
+            cBuilder.user(user, password);
+        }
+
+        if (authKey != null && !authKey.isEmpty()) {
+            cBuilder.authKey(authKey);
+        }
+
+        connection = cBuilder.connect();
 
         {
             DbList list = r.dbList();

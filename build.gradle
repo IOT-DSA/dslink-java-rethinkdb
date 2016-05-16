@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'findbugs'
 apply plugin: 'application'
 
-version '0.0.1-SNAPSHOT'
+version '0.0.2'
 
 mainClassName = 'org.dsa.iot.rethinkdb.Main'
 sourceCompatibility = 1.7
@@ -17,10 +17,10 @@ repositories {
 }
 
 dependencies {
-    compile 'org.iot-dsa:dslink:0.14.1'
-    compile 'org.iot-dsa:commons:0.14.1'
-    compile 'org.iot-dsa:historian:0.14.1'
-    compile 'com.rethinkdb:rethinkdb-driver:2.2-beta-1'
+    compile 'org.iot-dsa:dslink:0.15.0'
+    compile 'org.iot-dsa:commons:0.15.0'
+    compile 'org.iot-dsa:historian:0.15.0'
+    compile 'com.rethinkdb:rethinkdb-driver:2.3.1'
 }
 
 tasks.withType(FindBugs) {

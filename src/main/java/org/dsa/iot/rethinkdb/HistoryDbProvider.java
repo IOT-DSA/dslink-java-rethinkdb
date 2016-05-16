@@ -24,13 +24,21 @@ public class HistoryDbProvider extends DatabaseProvider {
                 Value vPort = event.getParameter("Port", ValueType.NUMBER);
                 Value vDatabase = event.getParameter("Database", ValueType.STRING);
                 Value vTable = event.getParameter("Table", ValueType.STRING);
+                Value vUser = event.getParameter("User", ValueType.STRING);
+                Value vPassword = event.getParameter("Password", ValueType.STRING);
+                Value vAuthKey = event.getParameter("AuthKey", ValueType.STRING);
 
-                String name = StringUtils.encodeName(vHost.getString() + ":" + vPort.getNumber().toString());
+                String name = StringUtils.encodeName(
+                        vHost.getString() + ":" + vPort.getNumber().toString()
+                );
                 NodeBuilder builder = createDbNode(name, event);
                 builder.setRoConfig("host", vHost);
                 builder.setRoConfig("port", vPort);
                 builder.setRoConfig("database", vDatabase);
                 builder.setRoConfig("table", vTable);
+                builder.setRoConfig("dbUser", vUser);
+                builder.setRoConfig("dbPassword", vPassword);
+                builder.setRoConfig("dbAuthKey", vAuthKey);
 
                 Value vName = event.getParameter("Name");
                 if (vName != null) {
@@ -93,7 +101,21 @@ public class HistoryDbProvider extends DatabaseProvider {
         Integer port = (Integer) node.getRoConfig("port").getNumber();
         String database = node.getRoConfig("database").getString();
         String table = node.getRoConfig("table").getString();
-        return new HistoryDb(node.getDisplayName(), this, host, port, database, table);
+        String user = node.getRoConfig("dbUser").getString();
+        String password = node.getRoConfig("dbPassword").getString();
+        String authKey = node.getRoConfig("dbAuthKey").getString();
+
+        return new HistoryDb(
+                node.getDisplayName(),
+                this,
+                host,
+                port,
+                database,
+                table,
+                user,
+                password,
+                authKey
+        );
     }
 
     @Override
